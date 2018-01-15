@@ -56,11 +56,20 @@ var girl = {
     getHeight: function () {
         return this.elem.height();
     },
+    getWidth: function () {
+        return this.elem.width();
+    },
     setOffset: function () {
         this.elem.css({
             left: visualWidth / 2,
             top: bridgeY - this.getHeight()
         });
+    },
+    getOffset: function () {
+        return this.elem.offset();
+    },
+    rotate:function(){
+       this.elem.addClass("girl-rotate");
     }
 };
 
@@ -254,7 +263,6 @@ function BoyWalk() {
         return defer;
     }
 
-
     // 计算移动距离
     function calculateDist(direction, proportion) {
         return (direction == "x" ?
@@ -298,12 +306,12 @@ function BoyWalk() {
             restoreWalk();
             $boy.addClass('boy-rotate');
             // 监听转身完毕
-            if (callback) {
+           /*  if (callback) {
                 $boy.on(animationEnd, function () {
                     callback();
                     $(this).off();
                 })
-            }
+            } */
         },
         // 取花
         talkFlower: function () {
