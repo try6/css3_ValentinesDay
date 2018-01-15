@@ -8,6 +8,8 @@
  * @param {[type]} container [页面容器节点]
  * @param {[type]} options   [参数]
  */
+
+var container = $("#content");
 function Swipe(container) {
     // 获取第一个子节点
     var element = container.find(":first");
@@ -27,24 +29,27 @@ function Swipe(container) {
     })
 
     // 设置每一个页面li的宽度
-    $.each(slides, function (index) {
-        var slide = slides.eq(index); // 获取到每一个li元素    
-        slide.css({
+    $.each(slides, function (index,value) {
+        $(value).css({
             width: width + 'px',
             height: height + 'px'
         });
     });
 
     // 监控完成与移动
-    swipe.scrollTo = function (x, speed) {
+    function scrollTo(x, speed) {
         // 执行动画移动
         element.css({
             'transition-timing-function': 'linear',
             'transition-duration': speed + 'ms',
             'transform': 'translate3d(-' + x + 'px,0px,0px)'
         });
-        return this;
+        
     }
 
-    return swipe;
+    return {
+        scrollTo: function (x, speed){
+            scrollTo(x, speed);
+        }
+    };
 }

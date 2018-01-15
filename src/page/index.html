@@ -8,7 +8,7 @@
     <link rel='stylesheet' href='./css/pageA.css' />
     <link rel='stylesheet' href='./css/pageB.css' />
     <link rel='stylesheet' href='./css/pageC.css' />
-    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    
 </head>
 <style type="text/css">
 
@@ -79,69 +79,78 @@
                 </ul>
             </li>
         </ul>
+        <div id="snowflake"></div>
         <div id="boy" class="charector slowWalk"></div>
         <div class="button" style="position:absolute;top:0">
             <button>开始</button>
         </div>
     </div>
+    <script type="text/javascript" src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="./js/swiper.js"></script>
     <script type="text/javascript" src="./js/walk.js"></script>
     <script type="text/javascript">
         $(function () {
-            var container = $("#content");
-            var swipe = Swipe(container);
+        
             // 页面滚动到指定的位置 
-            function scrollTo(time, proportionX) {
-                var distX = container.width() * proportionX;
-                swipe.scrollTo(distX, time);
-            } ////////////////////////////////////////////////////////
+             ////////////////////////////////////////////////////////
             //=================== 动画处理 =======================// 
             //////////////////////////////////////////////////////// 
 
             var boy = BoyWalk();
             // 开始 
             $("button:first").click(function () {
-                // 开始第一次走路
                 $("#sun").addClass("rotation");
                 $(".cloud1").addClass("cloudAnimate1");
                 $(".cloud2").addClass("cloudAnimate2");
+               /*  // 开始第一次走路
                 boy.walkTo(2000, 0.2).then(function () {
                         // 第一次走路完成 
-                             // 开始页面滚动 
-                        /*     swipe.scrollTo(container.width(), 5000)
-                        }).then(function () { // 第二次走路
-                            return boy.walkTo(5000, 0.5);
-                        }).then(function () {
-                            openDoor();
-                        }).then(function () {
-                            lamp.bright();
-                            return boy.toShop(2000);
-                        }).then(function () {
-                            return boy.talkFlower();
-                        }).then(function () {
-                            return boy.outShop(2000);
-                        }).then(function () {
-                            lamp.dark();
-                            return shutDoor();  */
-                   // }).then(function () {
-                       // swipe.scrollTo(container.width() * 2, 5000);
-                      //  return boy.walkTo(3000, 0.2);
-                    //}).then(function () {
-                        // 第二次走路到桥上left,top 
-                        return boy.walkTo(1500, 0.25, (bridgeY - girl.getHeight()) / visualHeight);
+                        // 开始页面滚动 
+                         swipe.scrollTo(container.width(), 5000);
+                    }).then(function () { 
+                        // 第二次走路
+                        return boy.walkTo(2000, 0.5);
+                    }). */boy.walkTo(2000,0.5).then(function () {
+                        //开门
+                        openDoor();
+                        lamp.bright();
+                    }).then(function () {
+                        //亮灯
+                        //进商店
+                        return boy.toShop(2000);
+                    }).then(function () {
+                        //拿花
+                        return boy.talkFlower();
+                    }).then(function () {
+                        //出商店
+                        return boy.outShop(2000);
+                    }).then(function () {
+                        //暗灯
+                        lamp.dark();    
+                        //关门
+                       shutDoor();
+                    }).then(function () {
+                        swipe.scrollTo(container.width() * 2, 3000);
+                        return boy.walkTo(3000, 0.2);
                     })
                     .then(function () {
+                        // 第二次走路到桥上left,top 
+                        return boy.walkTo(1000, 0.25, (bridgeY - girl.getHeight()) / visualHeight);
+                    }).then(function(){
                         // 实际走路的比例 
                         var proportionX = (girl.getOffset().left - boy.getWidth() + girl.getWidth() /
                             5) / visualWidth;
                         // 第三次桥上直走到小女孩面前 
-                        return boy.walkTo(1500, proportionX);
+                        return boy.walkTo(1000, proportionX);
+
                     }).then(function () {
                         // 图片还原原地停止状态
                         boy.resetOriginal();
-                    }).then(function(){
+                    }).then(function () {
+                        //转身
                         boy.rotate();
                         girl.rotate();
+                        snowflake();
                     });
 
             });

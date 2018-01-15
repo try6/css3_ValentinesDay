@@ -2,6 +2,7 @@
 var animationEnd = (function () {
     var explorer = navigator.userAgent;
     if (~explorer.indexOf('WebKit')) {
+        //判断是什么浏览器
         return 'webkitAnimationEnd';
     }
     return 'animationend';
@@ -35,7 +36,7 @@ function scrollTo(time, proportionX) {
 // 获取数据
 var getValue = function (className) {
     var $elem = $('' + className + '');
-    // 走路的路线坐标
+    //走路的路线坐标
     return {
         height: $elem.height(),
         top: $elem.position().top
@@ -49,14 +50,14 @@ var bridgeY = function () {
 }();
 
 ////////
-//小女孩 //
+//小女孩 /
 ////////
 var girl = {
     elem: $('.girl'),
     getHeight: function () {
         return this.elem.height();
     },
-    getWidth: function () {
+    getWidth:function(){
         return this.elem.width();
     },
     setOffset: function () {
@@ -65,33 +66,20 @@ var girl = {
             top: bridgeY - this.getHeight()
         });
     },
-    getOffset: function () {
+    getOffset:function(){
         return this.elem.offset();
     },
     rotate:function(){
-       this.elem.addClass("girl-rotate");
+        this.elem.addClass("girl-rotate");
     }
 };
 
 // 修正小女孩位置
 girl.setOffset();
 
-///////////
-//loge动画 //
-///////////
-var logo = {
-    elem: $('.logo'),
-    run: function () {
-        this.elem.addClass('logolightSpeedIn')
-            .on(animationEnd, function () {
-                $(this).addClass('logoshake').off();
-            });
-    }
-};
-
 
 // 用来临时调整页面
-swipe.scrollTo(visualWidth * 2, 0);
+swipe.scrollTo(visualWidth * 1, 0);
 
 
 function doorAction(left, right, time) {
@@ -107,7 +95,7 @@ function doorAction(left, right, time) {
             return;
         }
         count--;
-    };
+    }
     doorLeft.animate({
         'left': left
     }, time, complete);
@@ -141,7 +129,7 @@ function BoyWalk() {
     // 获取数据
     var getValue = function (className) {
         var $elem = $('' + className + '');
-        //走路的路线坐标
+        // 走路的路线坐标
         return {
             height: $elem.height(),
             top: $elem.position().top
@@ -154,6 +142,7 @@ function BoyWalk() {
     }();
 
     var $boy = $("#boy");
+    var boyWidth = $boy.width();
     var boyHeight = $boy.height();
 
     // 设置下高度    
@@ -205,11 +194,10 @@ function BoyWalk() {
         return d1;
     }
 
-
     // 走进商店
     function walkToShop(runTime) {
         var defer = $.Deferred();
-        var doorObj = $('.door')
+        var doorObj = $('.door');
         // 门的坐标
         var offsetDoor = doorObj.offset();
         var doorOffsetLeft = offsetDoor.left;
@@ -229,7 +217,7 @@ function BoyWalk() {
         instanceX = (doorOffsetLeft + doorMiddle) - (boyPoxLeft + boyMiddle);
 
         // Y的坐标
-        //top = 人物底部的top - 门中见的top值
+        // top = 人物底部的top - 门中见的top值
         instanceY = boyPoxTop + boyHeight - doorOffsetTop + (doorTopMiddle);
 
         // 开始走路
@@ -241,7 +229,7 @@ function BoyWalk() {
         walkPlay.done(function () {
             $boy.css({
                 opacity: 0
-            })
+            });
             defer.resolve();
         });
         return defer;
@@ -263,6 +251,7 @@ function BoyWalk() {
         return defer;
     }
 
+
     // 计算移动距离
     function calculateDist(direction, proportion) {
         return (direction == "x" ?
@@ -272,8 +261,8 @@ function BoyWalk() {
     return {
         // 开始走路
         walkTo: function (time, proportionX, proportionY) {
-            var distX = calculateDist('x', proportionX)
-            var distY = calculateDist('y', proportionY)
+            var distX = calculateDist('x', proportionX);
+            var distY = calculateDist('y', proportionY);
             return walkRun(time, distX, distY);
         },
         // 走进商店
@@ -306,16 +295,88 @@ function BoyWalk() {
             restoreWalk();
             $boy.addClass('boy-rotate');
             // 监听转身完毕
-           /*  if (callback) {
+            if (callback) {
                 $boy.on(animationEnd, function () {
                     callback();
                     $(this).off();
-                })
-            } */
+                });
+            }
         },
         // 取花
         talkFlower: function () {
             $boy.addClass('slowFlolerWalk');
         }
     }
+}
+
+
+
+var snowflakeURl = [
+    '../images/snowflake/snowflake1.png',
+    '../images/snowflake/snowflake2.png',
+    '../images/snowflake/snowflake3.png',
+    '../images/snowflake/snowflake4.png',
+    '../images/snowflake/snowflake5.png',
+    '../images/snowflake/snowflake6.png'
+]
+
+///////
+//飘雪花 //
+///////
+function snowflake() {
+    // 雪花容器
+    var $flakeContainer = $('#snowflake');
+
+    // 随机六张图
+    function getImagesName() {
+        return snowflakeURl[[Math.floor(Math.random() * 6)]];
+    }
+    // 创建一个雪花元素
+    function createSnowBox() {
+        var url = getImagesName();
+        return $('<div class="snowbox" />').css({
+            'width': 41,
+            'height': 41,
+            'position': 'absolute',
+            'backgroundSize': 'cover',
+            'zIndex': 100000,
+            'top': '-41px',
+            'backgroundImage': 'url(' + url + ')'
+        }).addClass('snowRoll');
+    }
+    // 开始飘花
+    setInterval(function () {
+        // 运动的轨迹
+        var startPositionLeft = Math.random() * visualWidth - 100,
+            startOpacity = 1,
+            endPositionTop = visualHeight - 40,
+            endPositionLeft = startPositionLeft - 100 + Math.random() * 500,
+            duration = visualHeight * 10 + Math.random() * 5000;
+
+        // 随机透明度，不小于0.5
+        var randomStart = Math.random();
+        randomStart = randomStart < 0.5 ? startOpacity : randomStart;
+
+        // 创建一个雪花
+        var $flake = createSnowBox();
+
+        // 设计起点位置
+        $flake.css({
+            left: startPositionLeft,
+            opacity: randomStart
+        });
+
+        // 加入到容器
+        $flakeContainer.append($flake);
+
+        // 开始执行动画
+        $flake.animate({
+            top: endPositionTop,
+            left: endPositionLeft,
+            opacity: 0.7
+        }, duration, function () {
+            $(this).remove() //结束后删除
+        });
+
+    }, 200);
 }
